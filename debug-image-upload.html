@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Image Upload</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .image-preview { max-width: 200px; max-height: 200px; margin: 10px 0; }
+        .result { margin: 10px 0; padding: 10px; background: #f0f0f0; }
+        .error { color: red; }
+        .success { color: green; }
+        .plant-card { border: 1px solid #ddd; margin: 10px; padding: 10px; display: inline-block; width: 200px; }
+        .plant-image { width: 100%; height: 150px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <h1>Debug Image Upload Issue</h1>
+    
+    <div class="debug-section">
+        <h3>1. Test Image Upload and Processing</h3>
+        <input type="file" id="test-image" accept="image/*">
+        <div id="image-preview"></div>
+        <button onclick="testImageProcessing()">Test Image Processing</button>
+        <div id="processing-result"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>2. Test Plant Creation with Image</h3>
+        <button onclick="testPlantCreation()">Create Test Plant with Image</button>
+        <div id="creation-result"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>3. Test Plant Retrieval and Display</h3>
+        <button onclick="loadAndDisplayPlants()">Load All Plants</button>
+        <div id="plants-display"></div>
+    </div>
+
+    <script>
+        let testImageData = null;
+
+        document.getElementById('test-image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    testImageData = e.target.result;
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'image-preview';
+                    document.getElementById('image-preview').innerHTML = '';
+                    document.getElementById('image-preview').appendChild(img);
+                    
+                    document.getElementById('processing-result').innerHTML = `
+                        <p><strong>File:</strong> ${file.name}</p>
+                        <p><strong>Size:</strong> ${file.size} bytes</p>
+                        <p><strong>Data URL Length:</strong> ${e.target.result.length} characters</p>
+                        <p><strong>Data URL Preview:</strong> ${e.target.result.substring(0, 100)}...</p>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function testImageProcessing() {
+            if (!testImageData) {
+                document.getElementById('processing-result').innerHTML = '<p class="error">Please select an image first</p>';
+                return;
+            }
+            
+            document.getElementById('processing-result').innerHTML += `
+                <p class="success">✅ Image processed successfully!</p>
+                <p><strong>Data URL starts with:</strong> ${testImageData.substring(0, 50)}...</p>
+            `;
+        }
+
+        async function testPlantCreation() {
+            if (!testImageData) {
+                document.getElementById('creation-result').innerHTML = '<p class="error">Please select an image first</p>';
+                return;
+            }
+
+            const plantData = {
+                name: "Debug Test Plant",
+                type: "tropical",
+                wateringFrequency: "weekly",
+                sunlightNeeds: "medium",
+                careNotes: "Test plant for debugging image upload",
+                imageUrl: testImageData
+            };
+
+            try {
+                document.getElementById('creation-result').innerHTML = '<p>Creating plant...</p>';
+                
+                const response = await fetch('http://localhost:8080/api/plants', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(plantData)
+                });
+
+                if (response.ok) {
+                    const newPlant = await response.json();
+                    document.getElementById('creation-result').innerHTML = `
+                        <p class="success">✅ Plant created successfully!</p>
+                        <p><strong>Plant ID:</strong> ${newPlant.id}</p>
+                        <p><strong>Plant Name:</strong> ${newPlant.name}</p>
+                        <p><strong>Image URL Length:</strong> ${newPlant.imageUrl ? newPlant.imageUrl.length : 'null'}</p>
+                        <p><strong>Image URL Preview:</strong> ${newPlant.imageUrl ? newPlant.imageUrl.substring(0, 100) + '...' : 'No image URL'}</p>
+                    `;
+                } else {
+                    const errorText = await response.text();
+                    document.getElementById('creation-result').innerHTML = `
+                        <p class="error">❌ Error creating plant: ${response.status}</p>
+                        <p><strong>Error details:</strong> ${errorText}</p>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('creation-result').innerHTML = `
+                    <p class="error">❌ Network error: ${error.message}</p>
+                `;
+            }
+        }
+
+        async function loadAndDisplayPlants() {
+            try {
+                document.getElementById('plants-display').innerHTML = '<p>Loading plants...</p>';
+                
+                const response = await fetch('http://localhost:8080/api/plants');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const plants = await response.json();
+                
+                let html = `<h4>Found ${plants.length} plants:</h4>`;
+                
+                plants.forEach(plant => {
+                    html += `
+                        <div class="plant-card">
+                            <h4>${plant.name}</h4>
+                            <div class="plant-image">
+                                ${plant.imageUrl ? 
+                                    `<img src="${plant.imageUrl}" alt="${plant.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                     <i class="fas fa-seedling" style="display: none;">No Image</i>` : 
+                                    `<i class="fas fa-seedling">No Image</i>`
+                                }
+                            </div>
+                            <p><strong>Type:</strong> ${plant.type}</p>
+                            <p><strong>Image URL Length:</strong> ${plant.imageUrl ? plant.imageUrl.length : 'null'}</p>
+                            <p><strong>Image URL Preview:</strong> ${plant.imageUrl ? plant.imageUrl.substring(0, 50) + '...' : 'No image URL'}</p>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('plants-display').innerHTML = html;
+                
+            } catch (error) {
+                document.getElementById('plants-display').innerHTML = `
+                    <p class="error">❌ Error loading plants: ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

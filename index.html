@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlantCare - Your Indoor Garden Companion</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-seedling"></i>
+                <span>PlantCare</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#dashboard" class="nav-link active">Dashboard</a>
+                <a href="#plants" class="nav-link">My Plants</a>
+                <a href="#add-plant" class="nav-link">Add Plant</a>
+                <a href="#notifications" class="nav-link">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="container">
+                <!-- Enhanced Welcome Section -->
+                <div class="welcome-hero">
+                    <div class="welcome-content">
+                        <div class="welcome-text">
+                            <h1 class="welcome-title">
+                                <span class="greeting">Welcome back,</span>
+                                <span class="highlight">Plant Parent!</span>
+                                <span class="emoji">🌱</span>
+                            </h1>
+                            <p class="welcome-subtitle">
+                                Take care of your green friends with 
+                                <span class="highlight-text">love</span> and 
+                                <span class="highlight-text">attention</span>
+                            </p>
+                            <div class="welcome-actions">
+                                <button class="btn btn-primary" onclick="showSection('add-plant')">
+                                    <i class="fas fa-plus"></i>
+                                    Add New Plant
+                                </button>
+                                <button class="btn btn-secondary" onclick="showSection('plants')">
+                                    <i class="fas fa-eye"></i>
+                                    View All Plants
+                                </button>
+                            </div>
+                        </div>
+                        <div class="welcome-visual">
+                            <div class="plant-illustration">
+                                <div class="plant-pot">
+                                    <div class="plant-stem"></div>
+                                    <div class="plant-leaves">
+                                        <div class="leaf leaf-1"></div>
+                                        <div class="leaf leaf-2"></div>
+                                        <div class="leaf leaf-3"></div>
+                                        <div class="leaf leaf-4"></div>
+                                    </div>
+                                </div>
+                                <div class="floating-elements">
+                                    <div class="floating-icon">💧</div>
+                                    <div class="floating-icon">☀️</div>
+                                    <div class="floating-icon">🌿</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-plants-count">0</h3>
+                            <p>Total Plants</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="need-watering-count">0</h3>
+                            <p>Need Watering</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="need-sunlight-count">0</h3>
+                            <p>Need Sunlight</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="due-repotting-count">0</h3>
+                            <p>Due for Repotting</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plant Categories Accordion -->
+                <div class="categories-accordion">
+                    <div class="accordion-header">
+                        <h2>Plant Categories</h2>
+                        <button class="accordion-toggle" id="categories-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="accordion-content" id="categories-content">
+                        <div class="category-filters">
+                            <button class="category-btn active" data-category="all" onclick="filterPlants('all')">
+                                <i class="fas fa-seedling"></i>
+                                All Plants
+                                <span class="category-count" id="count-all">0</span>
+                            </button>
+                            <button class="category-btn" data-category="tropical" onclick="filterPlants('tropical')">
+                                <i class="fas fa-leaf"></i>
+                                Tropical
+                                <span class="category-count" id="count-tropical">0</span>
+                            </button>
+                            <button class="category-btn" data-category="succulent" onclick="filterPlants('succulent')">
+                                <i class="fas fa-seedling"></i>
+                                Succulent
+                                <span class="category-count" id="count-succulent">0</span>
+                            </button>
+                            <button class="category-btn" data-category="flowering" onclick="filterPlants('flowering')">
+                                <i class="fas fa-flower"></i>
+                                Flowering
+                                <span class="category-count" id="count-flowering">0</span>
+                            </button>
+                            <button class="category-btn" data-category="herb" onclick="filterPlants('herb')">
+                                <i class="fas fa-leaf"></i>
+                                Herb
+                                <span class="category-count" id="count-herb">0</span>
+                            </button>
+                            <button class="category-btn" data-category="fern" onclick="filterPlants('fern')">
+                                <i class="fas fa-seedling"></i>
+                                Fern
+                                <span class="category-count" id="count-fern">0</span>
+                            </button>
+                            <button class="category-btn" data-category="cactus" onclick="filterPlants('cactus')">
+                                <i class="fas fa-cactus"></i>
+                                Cactus
+                                <span class="category-count" id="count-cactus">0</span>
+                            </button>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-group">
+                                <label for="sort-select">Sort by:</label>
+                                <select id="sort-select" onchange="sortPlants()">
+                                    <option value="name">Name A-Z</option>
+                                    <option value="name-desc">Name Z-A</option>
+                                    <option value="type">Type</option>
+                                    <option value="added-date">Date Added</option>
+                                    <option value="watering-due">Watering Due</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="status-filter">Status:</label>
+                                <select id="status-filter" onchange="filterByStatus()">
+                                    <option value="all">All Plants</option>
+                                    <option value="needs-watering">Needs Watering</option>
+                                    <option value="needs-sunlight">Needs Sunlight</option>
+                                    <option value="healthy">Healthy</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plant Grid -->
+                <div class="plants-section">
+                    <div class="section-title">
+                        <h2>Your Plant Collection</h2>
+                        <button class="btn btn-primary" onclick="showSection('add-plant')">
+                            <i class="fas fa-plus"></i>
+                            Add New Plant
+                        </button>
+                    </div>
+                    <div class="plants-grid" id="plants-grid">
+                        <!-- Plants will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plant Details Section -->
+        <section id="plant-details" class="section">
+            <div class="container">
+                <button class="back-btn" onclick="showSection('dashboard')">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </button>
+                <div class="plant-details-content" id="plant-details-content">
+                    <!-- Plant details will be dynamically loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- My Plants Section -->
+        <section id="plants" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>My Plants Collection</h1>
+                    <p>Manage and view all your plants in one place</p>
+                </div>
+                
+                <div class="plants-grid" id="plants-grid">
+                    <!-- Plants will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Plant Section -->
+        <section id="add-plant" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>Add New Plant</h1>
+                    <p>Help us get to know your new green friend</p>
+                </div>
+                <form class="add-plant-form" id="add-plant-form">
+                    <div class="form-group">
+                        <label for="plant-photo">Plant Photo</label>
+                        <div class="photo-upload">
+                            <input type="file" id="plant-photo" accept="image/*" hidden>
+                            <div class="photo-upload-area" onclick="document.getElementById('plant-photo').click()">
+                                <i class="fas fa-camera"></i>
+                                <p>Click to upload photo</p>
+                            </div>
+                            <div class="photo-preview" id="photo-preview" style="display: none;">
+                                <img id="preview-img" src="" alt="Plant preview">
+                                <button type="button" class="remove-photo" onclick="removePhoto()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="plant-name">Plant Name</label>
+                            <input type="text" id="plant-name" placeholder="e.g., Fiddle Leaf Fig" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="plant-type">Plant Type</label>
+                            <select id="plant-type" required>
+                                <option value="">Select plant type</option>
+                                <option value="tropical">Tropical</option>
+                                <option value="succulent">Succulent</option>
+                                <option value="flowering">Flowering</option>
+                                <option value="herb">Herb</option>
+                                <option value="fern">Fern</option>
+                                <option value="cactus">Cactus</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="watering-frequency">Watering Frequency</label>
+                            <select id="watering-frequency" required>
+                                <option value="">How often to water?</option>
+                                <option value="daily">Daily</option>
+                                <option value="every-2-days">Every 2 days</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="every-2-weeks">Every 2 weeks</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sunlight-needs">Sunlight Needs</label>
+                            <select id="sunlight-needs" required>
+                                <option value="">Select sunlight preference</option>
+                                <option value="low">Low (Indirect light)</option>
+                                <option value="medium">Medium (Bright indirect)</option>
+                                <option value="high">High (Direct sunlight)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="plant-notes">Care Notes (Optional)</label>
+                        <textarea id="plant-notes" placeholder="Any special care instructions or notes about your plant..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="showSection('dashboard')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Plant</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Notifications Section -->
+        <section id="notifications" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h1>Notifications & Reminders</h1>
+                    <p>Stay on top of your plant care schedule</p>
+                </div>
+                <div class="notifications-list" id="notifications-list">
+                    <!-- Notifications will be dynamically loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <i class="fas fa-seedling"></i>
+                        <span>PlantCare</span>
+                    </div>
+                    <p class="footer-description">
+                        Your trusted companion for nurturing indoor plants. 
+                        Track, care, and watch your green friends thrive.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Pinterest">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#dashboard" onclick="showSection('dashboard')">Dashboard</a></li>
+                        <li><a href="#plants" onclick="showSection('dashboard')">My Plants</a></li>
+                        <li><a href="#add-plant" onclick="showSection('add-plant')">Add Plant</a></li>
+                        <li><a href="#notifications" onclick="showSection('notifications')">Notifications</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">Plant Care</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showToast('Watering Guide coming soon!', 'error')">Watering Guide</a></li>
+                        <li><a href="#" onclick="showToast('Sunlight Tips coming soon!', 'error')">Sunlight Tips</a></li>
+                        <li><a href="#" onclick="showToast('Plant Types coming soon!', 'error')">Plant Types</a></li>
+                        <li><a href="#" onclick="showToast('Troubleshooting coming soon!', 'error')">Troubleshooting</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showToast('Help Center coming soon!', 'error')">Help Center</a></li>
+                        <li><a href="#" onclick="showToast('Contact Us coming soon!', 'error')">Contact Us</a></li>
+                        <li><a href="#" onclick="showToast('FAQ coming soon!', 'error')">FAQ</a></li>
+                        <li><a href="#" onclick="showToast('Feedback coming soon!', 'error')">Send Feedback</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p class="copyright">
+                        © 2024 PlantCare. Made with <i class="fas fa-heart"></i> for plant lovers.
+                    </p>
+                    <div class="footer-bottom-links">
+                        <a href="#" onclick="showToast('Privacy Policy coming soon!', 'error')">Privacy Policy</a>
+                        <a href="#" onclick="showToast('Terms of Service coming soon!', 'error')">Terms of Service</a>
+                        <a href="#" onclick="showToast('Cookie Policy coming soon!', 'error')">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Edit Plant Modal -->
+    <div class="modal" id="edit-plant-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Plant</h2>
+                <button class="modal-close" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="edit-plant-form" id="edit-plant-form">
+                <div class="form-group">
+                    <label for="edit-plant-photo">Plant Photo</label>
+                    <div class="photo-upload">
+                        <input type="file" id="edit-plant-photo" accept="image/*" hidden>
+                        <div class="photo-upload-area" onclick="document.getElementById('edit-plant-photo').click()">
+                            <i class="fas fa-camera"></i>
+                            <p>Click to change photo</p>
+                        </div>
+                        <div class="photo-preview" id="edit-photo-preview" style="display: none;">
+                            <img id="edit-preview-img" src="" alt="Plant preview">
+                            <button type="button" class="remove-photo" onclick="removeEditPhoto()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-plant-name">Plant Name</label>
+                        <input type="text" id="edit-plant-name" placeholder="e.g., Fiddle Leaf Fig" required>
+                    </div>
+                        <div class="form-group">
+                            <label for="edit-plant-type">Plant Type</label>
+                            <select id="edit-plant-type" required>
+                                <option value="">Select plant type</option>
+                                <option value="tropical">Tropical</option>
+                                <option value="succulent">Succulent</option>
+                                <option value="flowering">Flowering</option>
+                                <option value="herb">Herb</option>
+                                <option value="fern">Fern</option>
+                                <option value="cactus">Cactus</option>
+                            </select>
+                        </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-watering-frequency">Watering Frequency</label>
+                        <select id="edit-watering-frequency" required>
+                            <option value="">How often to water?</option>
+                            <option value="daily">Daily</option>
+                            <option value="every-2-days">Every 2 days</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="every-2-weeks">Every 2 weeks</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-sunlight-needs">Sunlight Needs</label>
+                        <select id="edit-sunlight-needs" required>
+                            <option value="">Select sunlight preference</option>
+                            <option value="low">Low (Indirect light)</option>
+                            <option value="medium">Medium (Bright indirect)</option>
+                            <option value="high">High (Direct sunlight)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-plant-notes">Care Notes (Optional)</label>
+                    <textarea id="edit-plant-notes" placeholder="Any special care instructions or notes about your plant..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Plant</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

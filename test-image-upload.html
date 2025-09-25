@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Upload Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .image-preview { max-width: 200px; max-height: 200px; margin: 10px 0; }
+        .result { margin: 10px 0; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>Plant Image Upload Test</h1>
+    
+    <div class="test-section">
+        <h3>Test Image Upload</h3>
+        <input type="file" id="test-image" accept="image/*">
+        <div id="image-preview"></div>
+        <button onclick="testImageUpload()">Test Upload</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('test-image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'image-preview';
+                    document.getElementById('image-preview').innerHTML = '';
+                    document.getElementById('image-preview').appendChild(img);
+                    
+                    // Show data URL info
+                    const dataUrl = e.target.result;
+                    document.getElementById('result').innerHTML = `
+                        <p><strong>File:</strong> ${file.name}</p>
+                        <p><strong>Size:</strong> ${file.size} bytes</p>
+                        <p><strong>Data URL Length:</strong> ${dataUrl.length} characters</p>
+                        <p><strong>Data URL Preview:</strong> ${dataUrl.substring(0, 100)}...</p>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        async function testImageUpload() {
+            const fileInput = document.getElementById('test-image');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const plantData = {
+                    name: "Test Plant with Image",
+                    type: "tropical",
+                    wateringFrequency: "weekly",
+                    sunlightNeeds: "medium",
+                    careNotes: "Test plant for image upload",
+                    imageUrl: e.target.result
+                };
+
+                try {
+                    const response = await fetch('http://localhost:8080/api/plants', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(plantData)
+                    });
+
+                    if (response.ok) {
+                        const newPlant = await response.json();
+                        document.getElementById('result').innerHTML += `
+                            <p style="color: green;"><strong>✅ Success!</strong> Plant created with ID: ${newPlant.id}</p>
+                            <p><strong>Image URL Length:</strong> ${newPlant.imageUrl ? newPlant.imageUrl.length : 'null'} characters</p>
+                        `;
+                    } else {
+                        document.getElementById('result').innerHTML += `
+                            <p style="color: red;"><strong>❌ Error:</strong> ${response.status} - ${response.statusText}</p>
+                        `;
+                    }
+                } catch (error) {
+                    document.getElementById('result').innerHTML += `
+                        <p style="color: red;"><strong>❌ Error:</strong> ${error.message}</p>
+                    `;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

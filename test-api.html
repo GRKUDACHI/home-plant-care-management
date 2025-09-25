@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>PlantCare API Test</h1>
+    <button onclick="testPlants()">Test Plants API</button>
+    <button onclick="testPdf()">Test PDF API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testPlants() {
+            try {
+                const response = await fetch('http://localhost:8080/api/plants');
+                const plants = await response.json();
+                document.getElementById('result').innerHTML = `
+                    <h3>Plants API Test</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Number of plants: ${plants.length}</p>
+                    <p>First plant: ${plants[0]?.name || 'None'}</p>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+
+        async function testPdf() {
+            try {
+                const response = await fetch('http://localhost:8080/api/pdf/plant/1');
+                if (response.ok) {
+                    const blob = await response.blob();
+                    document.getElementById('result').innerHTML = `
+                        <h3>PDF API Test</h3>
+                        <p>Status: ${response.status}</p>
+                        <p>PDF size: ${blob.size} bytes</p>
+                        <p>✅ PDF generation working!</p>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML = `<p>PDF Error: ${response.status}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<p>PDF Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
