@@ -554,3 +554,5 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: E:/home care ux/
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
 	... 59 more
+2025-09-26 16:01:46.016120+05:30 jdbc[93]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-224]

@@ -1,9 +1,0 @@
-com\homecare\entity\Plant.class
-com\homecare\service\PdfGenerationService.class
-com\homecare\controller\PlantController$PlantStats.class
-com\homecare\HomeCarePlantsApplication.class
-com\homecare\controller\PlantController.class
-com\homecare\controller\PdfController.class
-com\homecare\config\DataSeeder.class
-com\homecare\repository\PlantRepository.class
-com\homecare\config\CorsConfig.class
